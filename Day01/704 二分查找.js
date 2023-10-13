@@ -1,4 +1,11 @@
 /**
+ * 存疑：
+ * 1. middle 定义如何防溢出，以及溢出是什么场景；
+ * 2. return -1 这个不会被反复执行吗，这个return是出while还是search函数
+ * 3. >> 移位运算？？？
+*/
+
+/**
  * 时间 68 ms，击败 85.89%
  * 内存 42.76 MB，击败 74.83%
  * 无算法写法
@@ -70,9 +77,3 @@ var search = function(nums, target) {
     return -1
 };
 
-/**
- * 存疑的3个问题
- * middle 定义如何防溢出，以及溢出是什么场景；
- * return -1 这个不会被反复执行吗，这个return是出while还是search函数
- * >> 移位运算？？？
-*/
