@@ -49,6 +49,11 @@ node1.next = node3.next;
 // 只有一个节点的场景
 const temp = node1.next;
 node1.next = temp.next;
+
+// 删除头节点: 如果头节点不为空，那么将头指向头节点的下一个节点，让头节点成为下一个节点，这就删除了。
+while (head != null) {
+    head = head.next
+}
 ```
 存疑：只有一个节点的场景的逻辑不懂
 
