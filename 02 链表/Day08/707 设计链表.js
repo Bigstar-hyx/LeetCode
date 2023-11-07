@@ -1,34 +1,55 @@
-// 创建一个链表
-class ListNode {
-    constructor (val, next) {
+/**
+ * 创建一个链表
+ */ 
+class LinkNode {
+    constructor(val, next) {
         this.val = val;
         this.next = next;
     }
 }
 
-// 初始化 MyLinkedList 对象
-// 不知道需要做哪些初始化
+/** 
+ * 初始化 MyLinkedList 对象
+ * 不知道需要做哪些初始化
+ * 初始化链表的长度、头/尾，但不知道这是什么意思，
+ * 可能跟下面的要操作头尾节点有关吧，正常的可能不需要这样子做
+ */ 
 var MyLinkedList = function() {
-    this.size = 0 // 显然不知道这个是干嘛的
+    this._size = 0;
+    this._tail = null;
+    this._head = null;
 };
 
-/** 
- * 功能1:获取链表中下标为 index 的节点的值。如果下标无效，则返回 -1
- * 那么，在链表中如何取下标呢。
- * @param {number} index
+
+/**
+ * 讲真，很多题解都有这个，都定义了这个方法，
+ * 但是不定义应该也可以吧，不是很清楚这样做的原因
+ * （模仿就对了。。
+ * 好像懂了，是用来遍历的，然后调用直接传下标值就行
+ * 好像明白了，链表的遍历没有办法像数组一样直接取下标；
+ * 即使你知道这个是第100个数，你也只能一个个的遍历过去的取数，index就只是用来循环的倒计时
+ * @param {number} index 
  * @return {number}
  */
-MyLinkedList.prototype.get = function(index) {
-    let dummyHead = new ListNode(0)
-    dummyHead.next = head
-    let cur = dummyHead
-    while (head) {
-        if (cur === index) {
-            return cur.val
-        }
-        cur = cur.next
+MyLinkedList.prototype.getNode = function(index) {
+    if (index < 0 || index >= this._size) {
+        return null
     }
-    return -1
+    let cur = new LinkNode(0, this._head) //创建虚拟头节点
+    // 遍历？不懂这个是用来干嘛的
+    while (index-- >= 0) {
+        cur = cur.next
+        // index --
+    }
+    return cur
+};
+
+
+MyLinkedList.prototype.get = function(index) {
+    if (index < 0 || index >= this._size) {
+        return -1
+    }
+    return this.getNode(index).val;
 };
 
 /** 
@@ -37,24 +58,30 @@ MyLinkedList.prototype.get = function(index) {
  * @return {void}
  */
 MyLinkedList.prototype.addAtHead = function(val) {
-    let dummyHead = new ListNode(0)
-    dummyHead.next = this.head
-    dummyHead.next = val
-    dummyHead.next.next = this.head
-    head = dummyHead.next
-    return this.head
+    const node = new LinkNode(val, this._head)
+    this._head = node
+    this._size++
+    if (!this._tail) {
+        this._tail = node
+    }
 };
 
 /** 
  * 将一个值为 val 的节点追加到链表中作为链表的最后一个元素。
  * 要定位到最后一个节点
- * @param {number} val
+ * @param {number} val 
  * @return {void}
  */
 MyLinkedList.prototype.addAtTail = function(val) {
-    let node = new ListNode(val)
-    // .next= node
-    node.next = null
+    const node = new LinkNode(val, null)
+    this._size++
+    if (this._tail) {
+        this._tail.next = node
+        this._tail = node
+        return
+    }
+    this._tail = node
+    this._head = node
 };
 
 /** 
@@ -66,8 +93,22 @@ MyLinkedList.prototype.addAtTail = function(val) {
  * @return {void}
  */
 MyLinkedList.prototype.addAtIndex = function(index, val) {
-    
+    if (index > this._size) {
+        return 
+    }
+    if (index <=0) {
+        this.addAtHead(val)
+        return
+    } 
+    if (index === this._size) {
+        this.addAtTail(val)
+        return
+    }
+    const node = this.getNode(index - 1);
+    node.next = new LinkNode(val, node.next);
+    this._size++;
 };
+
 
 /** 
  * 如果下标有效，则删除链表中下标为 index 的节点。
@@ -75,7 +116,26 @@ MyLinkedList.prototype.addAtIndex = function(index, val) {
  * @return {void}
  */
 MyLinkedList.prototype.deleteAtIndex = function(index) {
-
+    if (index < 0 || index >= this._size) {
+        return
+    } 
+    if (index === 0) { 
+        // 删除头节点
+        this._head = this._head.next
+        // 只有一个节点的情况
+        if (index === this._size -1) {
+            this._tail = this._head
+        }
+        this._size--
+        return
+    } 
+    const node = this.getNode(index - 1)
+    node.next = node.next.next
+    if (index === this._size -1) {
+        // 删除尾节点
+        this._tail = node
+    }
+    this._size--
 };
 
 /**
